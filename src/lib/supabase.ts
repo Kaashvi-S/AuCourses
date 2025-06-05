@@ -33,6 +33,11 @@ export type Course = {
   created_at?: string | null;
   subfield?: Subfield;
   offered_in?: string;
+  /** Old catalogue fields kept for compatibility */
+  level?: number;
+  category?: string;
+  semester?: number;
+  is_intensive?: boolean;
 };
 
 export const fetchMajors = async (): Promise<Major[]> => {
@@ -156,4 +161,17 @@ export const formatSemesterCode = (code: string | null | undefined): string => {
   };
   
   return semesterMap[code] || code;
+};
+
+export const getCategoryName = (code: string | null | undefined): string => {
+  if (!code) return 'Unknown';
+
+  const categoryMap: Record<string, string> = {
+    ACC: 'Academic Core',
+    SCI: 'Sciences',
+    SSC: 'Social Sciences',
+    HUM: 'Humanities'
+  };
+
+  return categoryMap[code] || code;
 };

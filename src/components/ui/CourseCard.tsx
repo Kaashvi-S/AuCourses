@@ -10,7 +10,7 @@ interface CourseCardProps {
 }
 
 const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
-  const categoryName = getCategoryName(course.category);
+  const categoryName = course.category ? getCategoryName(course.category) : null;
   
   return (
     <Link 
@@ -26,18 +26,24 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
           <h3 className="text-[16px] font-medium text-[#1F1F1F] mb-1">{course.title}</h3>
           
           <div className="flex flex-wrap gap-2 mt-2">
-            <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-[#F8F7F4] text-[#728775]">
-              {categoryName}
-            </span>
-            
-            <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-[#F8F7F4] text-[#728775]">
-              {course.level}-level
-            </span>
-            
-            <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-[#F8F7F4] text-[#728775]">
-              Semester {course.semester}
-            </span>
-            
+            {categoryName && (
+              <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-[#F8F7F4] text-[#728775]">
+                {categoryName}
+              </span>
+            )}
+
+            {course.level && (
+              <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-[#F8F7F4] text-[#728775]">
+                {course.level}-level
+              </span>
+            )}
+
+            {course.semester && (
+              <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-[#F8F7F4] text-[#728775]">
+                Semester {course.semester}
+              </span>
+            )}
+
             {course.is_intensive && (
               <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-[#F8F7F4] text-[#728775]">
                 Intensive
