@@ -1,5 +1,4 @@
 import React from 'react';
-import { MessageSquare } from 'lucide-react';
 import SearchBar from '../components/ui/SearchBar';
 import Button from '../components/ui/Button';
 import CategoryCard from '../components/ui/CategoryCard';
@@ -72,7 +71,7 @@ const HomePage: React.FC = () => {
       <section className="bg-[#F8F7F4] pb-16">
         <div className="max-w-[1100px] mx-auto px-6">
           <div className="flex gap-4 overflow-x-auto pb-4 snap-x">
-            {categories.map((category, index) => (
+            {categories.map(category => (
               <CategoryCard 
                 key={category.title}
                 title={category.title} 

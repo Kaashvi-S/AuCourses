@@ -55,7 +55,7 @@ export const fetchMajors = async (): Promise<Major[]> => {
 };
 
 export const fetchSubfields = async (majorSlug: string): Promise<Subfield[]> => {
-  let query = supabase
+  const query = supabase
     .from('subfields')
     .select('*, majors!inner(*)')
     .eq('majors.slug', majorSlug);
