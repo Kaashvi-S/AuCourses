@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Book, Tag, Calendar } from 'lucide-react';
+import { Book } from 'lucide-react';
 import type { Course } from '../../lib/supabase';
 
 interface CourseListProps {

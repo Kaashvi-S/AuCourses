@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { fetchCourses, fetchSubfields, Course, Subfield } from '../lib/supabase';
+import {
+  fetchCourses,
+  fetchSubfields,
+  Course,
+  Subfield,
+  formatSemesterCode,
+} from '../lib/supabase';
 import CourseList from '../components/ui/CourseList';
 import SearchBar from '../components/ui/SearchBar';
+import CourseFilterBar from '../components/ui/CourseFilterBar';
 import { ChevronRight } from 'lucide-react';
 
 const CoursesPage: React.FC = () => {
@@ -12,6 +19,8 @@ const CoursesPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [subfield, setSubfield] = useState<Subfield | null>(null);
+  const [semesterFilter, setSemesterFilter] = useState('all');
+  const [levelFilter, setLevelFilter] = useState('all');
 
   useEffect(() => {
     const loadData = async () => {
@@ -38,17 +47,32 @@ const CoursesPage: React.FC = () => {
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
-    if (!term.trim()) {
-      setFilteredCourses(courses);
-      return;
-    }
-    
-    const filtered = courses.filter(course => 
-      course.title.toLowerCase().includes(term.toLowerCase()) ||
-      course.code.toLowerCase().includes(term.toLowerCase())
-    );
-    setFilteredCourses(filtered);
   };
+
+  useEffect(() => {
+    let result = courses;
+
+    if (searchTerm.trim()) {
+      result = result.filter(course =>
+        course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        course.code.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (semesterFilter !== 'all') {
+      result = result.filter(course =>
+        formatSemesterCode(course.offered_in) === semesterFilter
+      );
+    }
+
+    if (levelFilter !== 'all') {
+      result = result.filter(
+        course => course.level && course.level.toString() === levelFilter
+      );
+    }
+
+    setFilteredCourses(result);
+  }, [courses, searchTerm, semesterFilter, levelFilter]);
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -67,11 +91,19 @@ const CoursesPage: React.FC = () => {
       </h1>
       
       <div className="max-w-lg mb-8">
-        <SearchBar 
-          placeholder="Search courses by code or title..." 
+        <SearchBar
+          placeholder="Search courses by code or title..."
           onSearch={handleSearch}
         />
       </div>
+
+      <CourseFilterBar
+        semester={semesterFilter}
+        level={levelFilter}
+        onSemesterChange={setSemesterFilter}
+        onLevelChange={setLevelFilter}
+        className="mb-8"
+      />
       
       {loading ? (
         <div className="flex justify-center py-12">
